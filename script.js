@@ -45,6 +45,7 @@ cityCodesPromise.then(cityCodes => {
   // Variables for tracking cache status
   let cachedCounter = 0; // Counter to track the number of cached entries
   let cachedTime = 0; // Timestamp to track the time of caching
+  let currentTime = 0;
 
 
 
@@ -169,13 +170,13 @@ function openNav(idOfCity) {
     cachedTime = new Date(); // Store the current time when the function is called for the first time
   }
   console.log(cachedTime);
-  const currentTime = new Date();
+  currentTime = new Date();
 
   // Create a new Date object representing the specific time plus five minutes
   const cachedTimePlusFiveMinutes = new Date(cachedTime.getTime() + 5 * 60000);
   let id = idOfCity;
 
-  const API_KEY = '49cc8c821cd2aff9af04c9f98c36eb74'; // Replace with your OpenWeatherMap API key
+  const API_KEY = '49cc8c821cd2aff9af04c9f98c36eb74';
   const apiUrl = `https://api.openweathermap.org/data/2.5/weather?id=${idOfCity}&appid=${API_KEY}`;
 
   const cacheKey = idOfCity.toString();
