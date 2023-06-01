@@ -155,29 +155,127 @@ cityCodesPromise.then(cityCodes => {
     });
   }
 
-  const overlayContent = document.getElementById('overlay-content');
+
+// Call the function with cityCodesPromise
+getWeatherData(cityCodesPromise);
+
+const overlayContent = document.getElementById('overlay-content');
+
 /* Open when someone clicks on the span element */
 function openNav(idOfCity) {
+  cachedCounter = cachedCounter + 1; // Counter to track the number of times the function is called
+  console.log(cachedCounter);
+  if (cachedCounter == 1) {
+    cachedTime = new Date(); // Store the current time when the function is called for the first time
+  }
+  console.log(cachedTime);
+  const currentTime = new Date();
+
+  // Create a new Date object representing the specific time plus five minutes
+  const cachedTimePlusFiveMinutes = new Date(cachedTime.getTime() + 5 * 60000);
   let id = idOfCity;
 
   const API_KEY = '49cc8c821cd2aff9af04c9f98c36eb74'; // Replace with your OpenWeatherMap API key
   const apiUrl = `https://api.openweathermap.org/data/2.5/weather?id=${idOfCity}&appid=${API_KEY}`;
 
-  
+  const cacheKey = idOfCity.toString();
+  const cachedData = cache.get(cacheKey);
+  console.log(cachedData);
 
-  fetch(apiUrl)
-  .then(response => response.json())
-  .then(jsonData => {
-    
-    if(jsonData){
-      document.getElementById("myNav").style.width = "100%";
-      const description = jsonData.weather[0].description;
+  if (cache && currentTime.getTime() < cachedTimePlusFiveMinutes.getTime()) {
+    document.getElementById("myNav").style.width = "100%";
+    console.log("---------------Loading using cached data------------------");
+
+    // Extract relevant information from the cached data
+    const description = cachedData.weather[0].description;
+    const temperature = cachedData.main.temp;
+    const timestamp = cachedData.dt;
+    const cityId = cachedData.id;
+    const cityName = cachedData.name;
+    const celcius = Math.round(temperature - 273);
+    const fahrenheit = Math.round((temperature - 273.15) * 9 / 5 + 32);
+    const currentDate = new Date();
+    const month = currentDate.getMonth();
+    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const monthName = monthNames[month];
+    const day = currentDate.getDate();
+    const year = currentDate.getFullYear();
+    const hours = currentDate.getHours();
+    const minutes = currentDate.getMinutes();
+    const tempMin = cachedData.main.temp_min;
+    const tempMax = cachedData.main.temp_max;
+    const pressure = cachedData.main.pressure;
+    const humidity = cachedData.main.humidity;
+    const sunriseTime = new Date(cachedData.sys.sunrise * 1000).toLocaleTimeString();
+    const sunsetTime = new Date(cachedData.sys.sunset * 1000).toLocaleTimeString();
+
+    console.log('City:', cityName);
+    console.log('City ID:', cityId);
+    console.log('Weather Description:', description);
+    console.log('Temperature:', temperature);
+    console.log('Timestamp:', timestamp);
+    console.log('-------------------------');
+
+    // Update the overlay content with the cached weather data
+    overlayContent.innerHTML = `
+      <div class="wrapper">
+        <div class="widget-container">
+          <div class="top-left">
+            <h1 class="city" id="city">${cityName}</h1>
+            <h2 id="day">${day}</h2>
+            <h3 id="date">${monthName}, ${year}</h3>
+            <h3 id="time">${hours}:${minutes}</h3>
+            <p class="geo"></p>
+          </div>
+          <div class="top-right">
+            <h1 id="weather-status">${description}</h1>
+            <img class="weather-icon" src="https://myleschuahiock.files.wordpress.com/2016/02/sunny2.png">
+          </div>
+          <div class="horizontal-half-divider"></div>
+          <div class="bottom-left">
+            <h1 id="temperature">${celcius}</h1>
+            <h2 id="celsius">&degC</h2>
+            <h2 id="temp-divider">/</h2>
+            <h2 id="fahrenheit">${fahrenheit}&degF</h2>
+          </div>
+          <div class="vertical-half-divider"></div>
+          <div class="bottom-right">
+            <div class="other-details-key">
+              <p>Temp Min</p>
+              <p>Temp Max</p>
+              <p>Pressure</p>
+              <p>Humidity</p>
+              <p>Sunrise Time</p>
+              <p>Sunset Time</p>
+            </div>
+            <div class="other-details-values">
+              <p class="windspeed">${Math.round(tempMin - 273)} &degC</p>
+              <p class="humidity">${Math.round(tempMax - 273)} &degC</p>
+              <p class="pressure">${pressure} hPa</p>
+              <p class="sunrise-time">${humidity}%</p>
+              <p class="sunset-time">${sunriseTime}</p>
+              <p class="sunset-time">${sunsetTime}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  } else {
+    console.log("-------------Loading Initial Data----------------")
+    fetch(apiUrl)
+      .then(response => response.json())
+      .then(jsonData => {
+        if (jsonData) {
+          document.getElementById("myNav").style.width = "100%";
+
+          // Extract relevant information from the API response
+          const description = jsonData.weather[0].description;
           const temperature = jsonData.main.temp;
           const timestamp = jsonData.dt;
           const cityId = jsonData.id;
           const cityName = jsonData.name;
           const celcius = Math.round(temperature - 273);
-          const fahrenheit = Math.round((temperature - 273.15)* 9/5 + 32);
+          const fahrenheit = Math.round((temperature - 273.15) * 9 / 5 + 32);
           const currentDate = new Date();
           const month = currentDate.getMonth();
           const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -186,7 +284,6 @@ function openNav(idOfCity) {
           const year = currentDate.getFullYear();
           const hours = currentDate.getHours();
           const minutes = currentDate.getMinutes();
-
           const tempMin = jsonData.main.temp_min;
           const tempMax = jsonData.main.temp_max;
           const pressure = jsonData.main.pressure;
@@ -200,54 +297,52 @@ function openNav(idOfCity) {
           console.log('Temperature:', temperature);
           console.log('Timestamp:', timestamp);
           console.log('-------------------------');
-        overlayContent.innerHTML = `
-        
-        <div class="wrapper">
-          <div class="widget-container">
-            <div class="top-left">
-              <h1 class="city" id="city">${cityName}</h1>
-              <h2 id="day">${day}</h2>
-              <h3 id="date">${monthName}, ${year}</h3>
-              <h3 id="time">${hours}:${minutes}</h3>
-              <p class="geo"></p>
+
+          // Update the overlay content with the API weather data
+          overlayContent.innerHTML = `
+            <div class="wrapper">
+              <div class="widget-container">
+                <div class="top-left">
+                  <h1 class="city" id="city">${cityName}</h1>
+                  <h2 id="day">${day}</h2>
+                  <h3 id="date">${monthName}, ${year}</h3>
+                  <h3 id="time">${hours}:${minutes}</h3>
+                  <p class="geo"></p>
+                </div>
+                <div class="top-right">
+                  <h1 id="weather-status">${description}</h1>
+                  <img class="weather-icon" src="https://myleschuahiock.files.wordpress.com/2016/02/sunny2.png">
+                </div>
+                <div class="horizontal-half-divider"></div>
+                <div class="bottom-left">
+                  <h1 id="temperature">${celcius}</h1>
+                  <h2 id="celsius">&degC</h2>
+                  <h2 id="temp-divider">/</h2>
+                  <h2 id="fahrenheit">${fahrenheit}&degF</h2>
+                </div>
+                <div class="vertical-half-divider"></div>
+                <div class="bottom-right">
+                  <div class="other-details-key">
+                    <p>Temp Min</p>
+                    <p>Temp Max</p>
+                    <p>Pressure</p>
+                    <p>Humidity</p>
+                    <p>Sunrise Time</p>
+                    <p>Sunset Time</p>
+                  </div>
+                  <div class="other-details-values">
+                    <p class="windspeed">${Math.round(tempMin - 273)} &degC</p>
+                    <p class="humidity">${Math.round(tempMax - 273)} &degC</p>
+                    <p class="pressure">${pressure} hPa</p>
+                    <p class="sunrise-time">${humidity}%</p>
+                    <p class="sunset-time">${sunriseTime}</p>
+                    <p class="sunset-time">${sunsetTime}</p>
+                  </div>
+                </div>
+              </div>
             </div>
-          <div class="top-right">
-            <h1 id="weather-status">${description}</h1>
-            <img class="weather-icon" src="https://myleschuahiock.files.wordpress.com/2016/02/sunny2.png">
-          </div>
-        <div class="horizontal-half-divider"></div>
-          <div class="bottom-left">
-            <h1 id="temperature">${celcius}</h1>
-            <h2 id="celsius">&degC</h2>
-            <h2 id="temp-divider">/</h2>
-            <h2 id="fahrenheit">${fahrenheit}&degF</h2>
-          </div>
-          <div class="vertical-half-divider"></div>
-          <div class="bottom-right">
-          <div class="other-details-key">
-            <p>Temp Min</p>
-            <p>Temp Max</p>
-            <p>Pressure</p>
-            <p>Humidity</p>
-            <p>Sunrise Time</p>
-            <p>Sunset Time</p>
-          </div>
-          <div class="other-details-values">
-            <p class="windspeed">${Math.round(tempMin-273)} &degC</p>
-            <p class="humidity">${Math.round(tempMax-273)} &degC</p>
-            <p class="pressure">${pressure} hPa</p>
-            <p class="sunrise-time">${humidity}%</p>
-            <p class="sunset-time">${sunriseTime}</p>
-            <p class="sunset-time">${sunsetTime}</p>
-          </div>
-        </div>
-      </div>
-  
-        
-        
-        
-        `
-      
-    }
-  })
+          `;
+        }
+      });
+  }
 }
