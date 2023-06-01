@@ -106,87 +106,114 @@ main{
 
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap');
 
-*{
-    font-family: 'Poppins', sans-serif;
-    margin:0; padding:0;
-    box-sizing: border-box;
-    outline: none; border:none;
-    text-decoration: none;
-    text-transform: capitalize;
-    transition: .2s linear;
+* {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  outline: none;
+  border: none;
+  text-decoration: none;
+  text-transform: capitalize;
+  transition: .2s linear;
 }
 
-.container{
-    background:linear-gradient(45deg, rgb(9, 29, 55), rgb(230, 144, 238));
-    padding:15px 9%;
-    padding-bottom: 100px;
+.container {
+  background: linear-gradient(45deg, rgb(9, 29, 55), rgb(230, 144, 238));
+  padding: 15px 9%;
+  padding-bottom: 100px;
 }
 
-.container .heading{
-    text-align: center;
-    padding-bottom: 15px;
-    color:#fff;
-    text-shadow: 0 5px 10px rgba(0,0,0,.2);
-    font-size: 30px;
+.container .heading {
+  text-align: center;
+  padding-bottom: 15px;
+  color: #fff;
+  text-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+  font-size: 30px;
 }
 
-.container .box-container{
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-    gap:15px;
+.container .box-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 15px;
 }
 
-.container .box-container .box{
-    box-shadow: 0 5px 10px rgba(0,0,0,.2);
-    border-radius: 5px;
-    background: #fff;
-    text-align: center;
-    padding:30px 20px;
+.container .box-container .box {
+  box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+  border-radius: 5px;
+  background: #fff;
+  text-align: center;
+  padding: 30px 20px;
 }
 
-.container .box-container .box img{
-    height: 80px;
+.container .box-container .box img {
+  height: 80px;
 }
 
-.container .box-container .box h3{
-    color:#444;
-    font-size: 22px;
-    padding:10px 0;
+.container .box-container .box h3 {
+  color: #444;
+  font-size: 22px;
+  padding: 10px 0;
 }
 
-.container .box-container .box p{
-    color:#777;
+.container .box-container .box p {
+  color: #777;
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.container .box-container .box .btn {
+  margin-top: 10px;
+  display: inline-block;
+  background: #333;
+  color: #fff;
+  font-size: 17px;
+  border-radius: 5px;
+  padding: 8px 25px;
+}
+
+.container .box-container .box .btn:hover {
+  letter-spacing: 1px;
+  cursor: pointer;
+}
+
+.container .box-container .box:hover {
+  box-shadow: 0 10px 15px rgba(0, 0, 0, .3);
+  transform: scale(1.03);
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0px;
+  }
+  * {
+    padding: 0px;
+  }
+  
+  .container .box-container {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+
+  .container .box-container .box {
+    padding: 20px;
+  }
+
+  .container .box-container .box img {
+    height: 60px;
+  }
+
+  .container .box-container .box h3 {
+    font-size: 18px;
+  }
+
+  .container .box-container .box p {
+    font-size: 14px;
+  }
+
+  .container .box-container .box .btn {
     font-size: 15px;
-    line-height: 1.8;
-}
-
-.container .box-container .box .btn{
-    margin-top: 10px;
-    display: inline-block;
-    background:#333;
-    color:#fff;
-    font-size: 17px;
-    border-radius: 5px;
-    padding: 8px 25px;
-}
-
-.container .box-container .box .btn:hover{
-    letter-spacing: 1px;
-    cursor: pointer;
-}
-
-.container .box-container .box:hover{
-    box-shadow: 0 10px 15px rgba(0,0,0,.3);
-    transform: scale(1.03);
-}
-
-@media (max-width:768px){
-    .container{
-        padding:0px;
-    }
-    *{
-      padding: 0px;  
-    }
+    padding: 6px 20px;
+  }
 }
 
 /* The Overlay (background) */
@@ -291,13 +318,13 @@ main{
 }
 
 .weather {
-    width: 400px;
-    margin: 1rem;
-    border-radius: 30px;
-    box-shadow: 0.2px 4px 5px rgba(0,0,0,0.1);
-    background-color: var(--secondary-color);
-    position:relative;
-    overflow: hidden;
+  width: 400px;
+  margin: 1rem;
+  border-radius: 30px;
+  box-shadow: 0.2px 4px 5px rgba(0,0,0,0.1);
+  background-color: var(--secondary-color);
+  position: relative;
+  overflow: hidden;
 }
 
 .widget-container {
@@ -306,17 +333,14 @@ main{
   display: block;
   background-color: #313e45;
   border-radius: 25px;
-/*   border: 5px solid #eceff1; */
   margin: 0 auto;
 }
-
 
 /* Widget 4 Quarter Division here */
 
 .top-left {
   height: 60%;
   width: 50%;
-  /*   background-color:red; */
   padding: 55px 0 0 70px;
   display: inline-block;
 }
@@ -324,7 +348,6 @@ main{
 .top-right {
   height: 60%;
   width: 50%;
-  /*   background-color: blue; */
   float: right;
   padding: 55px 0 0 0;
 }
@@ -332,7 +355,6 @@ main{
 .bottom-left {
   height: 40%;
   width: 45%;
-  /*   background-color:orange; */
   float: left;
   margin: 0;
   padding: 40px 0 0 50px;
@@ -341,19 +363,14 @@ main{
 .bottom-right {
   height: 40%;
   width: 55%;
-  /*   background-color: brown; */
   float: right;
   padding: 25px 0 0 60px;
 }
 
-h1,
-h2,
-h3,
-p {
+h1, h2, h3, p {
   margin: 0;
   padding: 0;
 }
-
 
 /* Top-left Div CSS */
 
@@ -380,12 +397,6 @@ p {
   margin-top: 8px;
 }
 
-#codepen-link {
-  font-weight: 400;
-  font-size: 12px;
-  margin-top: 20px;
-}
-
 .top-left > a {
   text-decoration: none;
   color: white;
@@ -394,7 +405,6 @@ p {
 .top-left > a:hover {
   color: #b0bec5;
 }
-
 
 /* Top-Right Div CSS */
 
@@ -411,7 +421,6 @@ p {
   display: block;
   margin: 15px auto 0 auto;
 }
-
 
 /* Horizontal-Half-divider */
 
@@ -430,7 +439,6 @@ p {
   display: inline-block;
   padding: 0;
 }
-
 
 /* Bottom-left CSS */
 
@@ -469,9 +477,6 @@ p {
   cursor: pointer;
 }
 
-
-
-
 /* Bottom-Right CSS */
 
 .other-details-key {
@@ -488,21 +493,89 @@ p {
 }
 
 .watermark-link {
-  text-decoration:none;
-  color:#b0bec5;
+  text-decoration: none;
+  color: #b0bec5;
 }
 
 .watermark-link:hover {
-  color:white;
-  text-decoration:none;
+  color: white;
+  text-decoration: none;
 }
 
 .watermark {
-  margin-top:10px;
-  text-align:center;
-  font-weight:400;
+  margin-top: 10px;
+  text-align: center;
+  font-weight: 400;
 }
 
 .wrapper {
-    color: white;
+  color: white;
+}
+
+/* Responsive adjustments */
+
+@media screen and (max-width: 768px) {
+  .weather {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .widget-container {
+    width: 90%;
+    max-width: 400px;
+    height: auto;
+  }
+
+  .top-left,
+  .top-right,
+  .bottom-left,
+  .bottom-right {
+    width: 100%;
+    padding: 20px;
+    text-align: center;
+    background-color: #313e45;
+  }
+
+  
+  .horizontal-half-divider {
+    margin-top: 10px;
+    display: none;
+  }
+
+  .vertical-half-divider {
+    width: 100%;
+    height: 3px;
+    margin-top: 0;
+    margin-left: 0;
+    display: none;
+  }
+
+  #temperature {
+    font-size: 40px;
+  }
+
+  #celsius,
+  #temp-divider,
+  #fahrenheit {
+    font-size: 20px;
+  }
+
+  .other-details-values {
+    margin-left: 0;
+    margin-top: 10px;
+  }
+
+  /* Fix alignment of columns in bottom-right section */
+  .bottom-right {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+
+  .other-details-key,
+  .other-details-values {
+    width: 45%;
+    margin: 0;
+  }
 }
