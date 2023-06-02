@@ -204,8 +204,8 @@ function openNav(idOfCity) {
     const tempMax = cachedData.main.temp_max;
     const pressure = cachedData.main.pressure;
     const humidity = cachedData.main.humidity;
-    const sunriseTime = new Date(cachedData.sys.sunrise * 1000).toLocaleTimeString();
-    const sunsetTime = new Date(cachedData.sys.sunset * 1000).toLocaleTimeString();
+    const sunriseTime = new Date(cachedData.sys.sunrise * 1000 + cachedData.timezone * 1000 - 19800 * 1000).toLocaleTimeString();
+    const sunsetTime = new Date(cachedData.sys.sunset * 1000 + cachedData.timezone * 1000 - 19800 * 1000).toLocaleTimeString();
     const country = cachedData.sys.country;
     const timeZoneOffset = cachedData.timezone; // Offset in seconds
     const currentTime = new Date(currentDate.getTime() + timeZoneOffset * 1000 - 19800 * 1000);
