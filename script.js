@@ -199,16 +199,25 @@ function openNav(idOfCity) {
     const month = currentDate.getMonth();
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     const monthName = monthNames[month];
-    const day = currentDate.getDate();
     const year = currentDate.getFullYear();
-    const hours = currentDate.getHours();
-    const minutes = currentDate.getMinutes();
     const tempMin = cachedData.main.temp_min;
     const tempMax = cachedData.main.temp_max;
     const pressure = cachedData.main.pressure;
     const humidity = cachedData.main.humidity;
     const sunriseTime = new Date(cachedData.sys.sunrise * 1000).toLocaleTimeString();
     const sunsetTime = new Date(cachedData.sys.sunset * 1000).toLocaleTimeString();
+    const country = cachedData.sys.country;
+    const timeZoneOffset = cachedData.timezone; // Offset in seconds
+    const currentTime = new Date(currentDate.getTime() + timeZoneOffset * 1000 - 19800 * 1000);
+    // Remove the time zone offset from the current time
+    const options = {
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric'
+    };
+
+    const formattedTime = currentTime.toLocaleString('en-US', options);
+    const day = currentTime.getDate();
 
     console.log('City:', cityName);
     console.log('City ID:', cityId);
@@ -222,10 +231,10 @@ function openNav(idOfCity) {
       <div class="wrapper">
         <div class="widget-container">
           <div class="top-left">
-            <h1 class="city" id="city">${cityName}</h1>
+            <h1 class="city" id="city">${cityName}, ${country}</h1>
             <h2 id="day">${day}</h2>
             <h3 id="date">${monthName}, ${year}</h3>
-            <h3 id="time">${hours}:${minutes}</h3>
+            <h3 id="time">${formattedTime}</h3>
             <p class="geo"></p>
           </div>
           <div class="top-right">
@@ -281,16 +290,25 @@ function openNav(idOfCity) {
           const month = currentDate.getMonth();
           const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
           const monthName = monthNames[month];
-          const day = currentDate.getDate();
           const year = currentDate.getFullYear();
-          const hours = currentDate.getHours();
-          const minutes = currentDate.getMinutes();
           const tempMin = jsonData.main.temp_min;
           const tempMax = jsonData.main.temp_max;
           const pressure = jsonData.main.pressure;
           const humidity = jsonData.main.humidity;
           const sunriseTime = new Date(jsonData.sys.sunrise * 1000).toLocaleTimeString();
           const sunsetTime = new Date(jsonData.sys.sunset * 1000).toLocaleTimeString();
+          const country = cachedData.sys.country;
+          const timeZoneOffset = cachedData.timezone; // Offset in seconds
+          const currentTime = new Date(currentDate.getTime() + timeZoneOffset * 1000 - 19800 * 1000);
+          // Remove the time zone offset from the current time
+          const options = {
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric'
+          };
+
+          const formattedTime = currentTime.toLocaleString('en-US', options);
+          const day = currentTime.getDate();
 
           console.log('City:', cityName);
           console.log('City ID:', cityId);
@@ -304,10 +322,10 @@ function openNav(idOfCity) {
             <div class="wrapper">
               <div class="widget-container">
                 <div class="top-left">
-                  <h1 class="city" id="city">${cityName}</h1>
+                  <h1 class="city" id="city">${cityName}, ${country}</h1>
                   <h2 id="day">${day}</h2>
                   <h3 id="date">${monthName}, ${year}</h3>
-                  <h3 id="time">${hours}:${minutes}</h3>
+                  <h3 id="time">${formattedTime}</h3>
                   <p class="geo"></p>
                 </div>
                 <div class="top-right">
