@@ -2,6 +2,10 @@ const API_KEY = '49cc8c821cd2aff9af04c9f98c36eb74';
 
 // Create a Map to store the cached data
 const cache = new Map();
+// Variables for tracking cache status
+let currentTime = 0;
+let lastUpdatedTime = 0;
+
 
 // Function to extract city codes from cities.json
 async function extractCityCodes() {
@@ -16,10 +20,12 @@ async function extractCityCodes() {
 }
 
 // Call the extractCityCodes function and store the result in a variable
-const cityCodesPromise = extractCityCodes();
+const extractedCityCodes = extractCityCodes();
 
+// Function to update the cache
+function updateCache(){
 // Fetch weather data for each city code and store in the cache
-cityCodesPromise.then(cityCodes => {
+extractedCityCodes.then(cityCodes => {
     cityCodes.forEach(cityCode => {
       // Create the API URL for each city code
       const apiUrl = `https://api.openweathermap.org/data/2.5/weather?id=${cityCode}&appid=${API_KEY}`;
@@ -30,86 +36,33 @@ cityCodesPromise.then(cityCodes => {
         .then(jsonData => {
           // Store the data in the cache using city code as the key
           cache.set(cityCode, jsonData);
+          lastUpdatedTime = new Date();
+          
   
           console.log(`Data fetched and stored for city code ${cityCode}`);
         })
         .catch(error => console.error('Error:', error));
     });
-  });
+  });}
+
+
   
-  // Access the cityCodes array outside the function
-  cityCodesPromise.then(cityCodes => {
-    console.log(cityCodes);
-  });
   
-  // Variables for tracking cache status
-  let cachedCounter = 0; // Counter to track the number of cached entries
-  let cachedTime = 0; // Timestamp to track the time of caching
-  let currentTime = 0;
 
 
-
-  function getWeatherData(cityCodesPromise) {
-    cityCodesPromise.then(cityCodes => {
+  function getWeatherData(extractedCityCodes) {
+    extractedCityCodes.then(cityCodes => {
       cityCodes.forEach(cityCode => {
-        const API_KEY = '49cc8c821cd2aff9af04c9f98c36eb74'; // Replace with your OpenWeatherMap API key
+        const API_KEY = '49cc8c821cd2aff9af04c9f98c36eb74';
         const apiUrl = `https://api.openweathermap.org/data/2.5/weather?id=${cityCode}&appid=${API_KEY}`;
   
-        const cacheKey = cityCode.toString();
-        const cachedData = cache.get(cacheKey);
-  
-        // Check if the data is available in the cache and is within the valid time range (5 minutes)
-        if (cachedData && Date.now() - cachedData.timestamp <= 300000) {
-  
-          // Serve the data from cache
-          console.log('Serving data from cache for city code:', cityCode);
-          displayWeatherData(cachedData.data);
-  
-          // Extract relevant information from the cached data
-          const description = cachedData.weather[0].description;
-          const temperature = cachedData.main.temp;
-          const timestamp = cachedData.dt;
-          const cityId = cachedData.id;
-          const cityName = cachedData.name;
-          const celcius = Math.round(temperature - 273);
-  
-          console.log('City:', cityName);
-          console.log('City ID:', cityId);
-          console.log('Weather Description:', description);
-          console.log('Temperature:', temperature);
-          console.log('Timestamp:', timestamp);
-          console.log('-------------------------');
-  
-          // Create a weather element and add it to the DOM
-          const weatherEl = document.createElement('div');
-          weatherEl.classList.add('weather');
-  
-          weatherEl.innerHTML = `
-            <div class="container">
-              <h1 class="heading">${cityName}</h1>
-              <div class="box-container">
-                  <div class="box">
-                      <h1>${celcius} °c</h1>
-                      <h3> ${description} </h3>
-                      <Button class="btn" id="${cityId}">find more</Button>
-                  </div>
-              </div>
-            </div>
-          `;
-  
-          main.appendChild(weatherEl);
-  
-          // Add event listener for the "find more" button
-          document.getElementById(cityId).addEventListener('click', () => {
-            openNav(cityId);
-          });
-        }
-  
-        else {
           // Fetch the weather data from the API
           fetch(apiUrl)
             .then(response => response.json())
             .then(jsonData => {
+              cache.set(cityCode, jsonData);
+              lastUpdatedTime = new Date();
+              
               // Extract relevant information from the fetched data
               const description = jsonData.weather[0].description;
               const temperature = jsonData.main.temp;
@@ -147,33 +100,30 @@ cityCodesPromise.then(cityCodes => {
               // Add event listener for the "find more" button
               document.getElementById(cityId).addEventListener('click', () => {
                 console.log(cityId);
-                openNav(cityId);
+                openOverlay(cityId);
               });
             })
             .catch(error => console.error('Error:', error));
-        }
+        
       });
     });
   }
 
 
-// Call the function with cityCodesPromise
-getWeatherData(cityCodesPromise);
+
+
+// Call the function with extractedCityCodes
+getWeatherData(extractedCityCodes);
 
 const overlayContent = document.getElementById('overlay-content');
 
-/* Open when someone clicks on the span element */
-function openNav(idOfCity) {
-  cachedCounter = cachedCounter + 1; // Counter to track the number of times the function is called
-  console.log(cachedCounter);
-  if (cachedCounter == 1) {
-    cachedTime = new Date(); // Store the current time when the function is called for the first time
-  }
-  console.log(cachedTime);
+/* Open when someone clicks on the 'Find More' button */
+function openOverlay(idOfCity) {
+  
   currentTime = new Date();
 
   // Create a new Date object representing the specific time plus five minutes
-  const cachedTimePlusFiveMinutes = new Date(cachedTime.getTime() + 5 * 60000);
+  const cachedTimePlusFiveMinutes = new Date(lastUpdatedTime.getTime() + 5 * 60000);
   let id = idOfCity;
 
   const API_KEY = '49cc8c821cd2aff9af04c9f98c36eb74';
@@ -183,6 +133,7 @@ function openNav(idOfCity) {
   const cachedData = cache.get(cacheKey);
   console.log(cachedData);
 
+  // Checking if cached data is expired or not. This if block runs if cached data is not expired.
   if (cache && currentTime.getTime() < cachedTimePlusFiveMinutes.getTime()) {
     document.getElementById("myNav").style.width = "100%";
     console.log("---------------Loading using cached data------------------");
@@ -232,9 +183,9 @@ function openNav(idOfCity) {
         <div class="widget-container">
           <div class="top-left">
             <h1 class="city" id="city">${cityName}, ${country}</h1>
-            <h2 id="day">${day}</h2>
-            <h3 id="date">${monthName}, ${year}</h3>
-            <h3 id="time">${formattedTime}</h3>
+            <h2 id="day">${formattedTime}</h2>
+            <h3 id="date"></h3>
+            <h3 id="time">${day}/${monthName}/${year}</h3>
             <p class="geo"></p>
           </div>
           <div class="top-right">
@@ -271,7 +222,7 @@ function openNav(idOfCity) {
       </div>
     `;
   } else {
-    console.log("-------------Loading Initial Data----------------")
+    console.log("-------------Loading New Data----------------");
     fetch(apiUrl)
       .then(response => response.json())
       .then(jsonData => {
@@ -323,9 +274,9 @@ function openNav(idOfCity) {
               <div class="widget-container">
                 <div class="top-left">
                   <h1 class="city" id="city">${cityName}, ${country}</h1>
-                  <h2 id="day">${day}</h2>
-                  <h3 id="date">${monthName}, ${year}</h3>
-                  <h3 id="time">${formattedTime}</h3>
+                  <h2 id="day">${formattedTime}</h2>
+                  <h3 id="date"></h3>
+                  <h3 id="time">${day}/${monthName}/${year}</h3>
                   <p class="geo"></p>
                 </div>
                 <div class="top-right">
@@ -363,10 +314,11 @@ function openNav(idOfCity) {
           `;
         }
       });
+      updateCache();
   }
 }
 
-/* Close when someone clicks on the "x" symbol inside the overlay */
+/* Close when clicks on the "x" symbol inside the overlay */
 function closeNav() {
   document.getElementById("myNav").style.width = "0%";
 }
